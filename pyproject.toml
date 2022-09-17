@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "everytime"
+version = "0.1.0"
+description = "Schedule asyncio coroutines"
+authors = ["meipp <meipp@users.noreply.github.com>"]
+homepage = "https://github.com/meipp/every/"
+repository = "https://github.com/meipp/every/"
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^5.0.4"
+flake8-bugbear = "^22.9.11"
+pep8-naming = "^0.13.2"
+flake8-builtins = "^1.5.3"
+flake8-comprehensions = "^3.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
