@@ -13,7 +13,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Install dependencies
-        run: pip install flake8 flake8-bugbear pep8-naming flake8-builtins flake8-comprehensions
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: install everything with poetry
+        run: poetry install -v
       - name: Run flake8
-        run: flake8 --count --statistics --max-line-length=120 ./src/every.py
+        run: poetry run flake8 --count --statistics --max-line-length=120 everytime
