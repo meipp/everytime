@@ -1,5 +1,6 @@
 import asyncio
-from every import *
+from everytime import *
+
 
 async def do_something():
     print("Hello")

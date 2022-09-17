@@ -11,12 +11,14 @@ day = days = 24 * hours
 week = weeks = 7 * days
 other = 2
 
+
 def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
     def repeat():
         asyncio.ensure_future(action(), loop=loop)
         loop.call_later(delay, repeat)
 
     loop.call_later(initial_delay, repeat)
+
 
 class ScheduleWithStartOffset:
     def __init__(self, initial_delay: float, delay: float, loop: asyncio.AbstractEventLoop) -> None:
@@ -27,6 +29,7 @@ class ScheduleWithStartOffset:
     def __call__(self, action) -> None:
         schedule_repeating_action(self.loop, self.initial_delay, self.delay, action)
 
+
 class ScheduleWithoutStartOffset:
     def __init__(self, delay: float, loop: asyncio.AbstractEventLoop) -> None:
         self.delay = delay
@@ -34,7 +37,7 @@ class ScheduleWithoutStartOffset:
 
     def __call__(self, action) -> ScheduleWithStartOffset:
         self.starting_in(0)(action)
-    
+
     def starting_in(self, initial_delay: float) -> ScheduleWithStartOffset:
         return ScheduleWithStartOffset(initial_delay, self.delay, self.loop)
 
@@ -44,8 +47,9 @@ class ScheduleWithoutStartOffset:
         if start < now:
             start += timedelta(days=1)
         initial_delay = (start - now).total_seconds()
-        
+
         return ScheduleWithStartOffset(initial_delay, self.delay, self.loop)
+
 
 class Every:
     def __init__(self, loop: asyncio.AbstractEventLoop) -> None:
@@ -53,5 +57,6 @@ class Every:
 
     def __call__(self, delay: float) -> ScheduleWithoutStartOffset:
         return ScheduleWithoutStartOffset(delay, self.loop)
+
 
 every = Every(loop=DEFAULT_LOOP)
