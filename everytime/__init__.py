@@ -2,12 +2,12 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import Generator
 
-millisecond = milliseconds = 0.001
-second = seconds = 1000 * milliseconds
-minute = minutes = 60 * seconds
-hour = hours = 60 * minutes
-day = days = 24 * hours
-week = weeks = 7 * days
+millisecond = milliseconds = timedelta(milliseconds=1)
+second = seconds = timedelta(seconds=1)
+minute = minutes = timedelta(minutes=1)
+hour = hours = timedelta(hours=1)
+day = days = timedelta(days=1)
+week = weeks = timedelta(weeks=1)
 other = 2
 
 
@@ -50,32 +50,33 @@ def timeiter(start: datetime, step: timedelta) -> Generator[datetime, None, None
 
 
 class ScheduleWithStartOffset:
-    def __init__(self, initial_delay: float, delay: float) -> None:
+    def __init__(self, initial_delay: datetime, delay: timedelta) -> None:
         self.initial_delay = initial_delay
         self.delay = delay
 
     def do(self, action, loop) -> None:
-        schedule_repeating_action(loop, self.initial_delay, self.delay, action)
+        times = timeiter(self.initial_delay, self.delay)
+        schedule_at(times, action, loop)
 
 
 class ScheduleWithoutStartOffset:
-    def __init__(self, delay: float) -> None:
-        self.delay = delay
+    def __init__(self, step: timedelta) -> None:
+        self.step = step
 
     def do(self, action, loop) -> ScheduleWithStartOffset:
-        self.starting_in(0).do(action, loop)
+        self.starting_in(datetime.now()).do(action, loop)
 
-    def starting_in(self, initial_delay: float) -> ScheduleWithStartOffset:
-        return ScheduleWithStartOffset(initial_delay, self.delay)
+    def starting_in(self, initial_delay: datetime) -> ScheduleWithStartOffset:
+        return ScheduleWithStartOffset(initial_delay, self.step)
 
     def starting_at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
         now = datetime.now()
         start = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
         if start < now:
             start += timedelta(days=1)
-        initial_delay = (start - now).total_seconds()
+        initial_delay = start - now
 
-        return ScheduleWithStartOffset(initial_delay, self.delay)
+        return ScheduleWithStartOffset(initial_delay, self.step)
 
 
 class EveryN:
