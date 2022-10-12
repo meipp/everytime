@@ -54,7 +54,7 @@ class ScheduleWithStartOffset:
         self.initial_delay = initial_delay
         self.delay = delay
 
-    def __call__(self, action, loop) -> None:
+    def do(self, action, loop) -> None:
         schedule_repeating_action(loop, self.initial_delay, self.delay, action)
 
 
@@ -62,8 +62,8 @@ class ScheduleWithoutStartOffset:
     def __init__(self, delay: float) -> None:
         self.delay = delay
 
-    def __call__(self, action, loop) -> ScheduleWithStartOffset:
-        self.starting_in(0)(action, loop)
+    def do(self, action, loop) -> ScheduleWithStartOffset:
+        self.starting_in(0).do(action, loop)
 
     def starting_in(self, initial_delay: float) -> ScheduleWithStartOffset:
         return ScheduleWithStartOffset(initial_delay, self.delay)
