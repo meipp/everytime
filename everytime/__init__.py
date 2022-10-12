@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
+from typing import Generator
 
 DEFAULT_LOOP = asyncio.get_event_loop()
 
@@ -18,6 +19,36 @@ def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
         loop.call_later(delay, repeat)
 
     loop.call_later(initial_delay, repeat)
+
+
+def schedule_at(times: Generator[datetime, None, None], action, loop) -> None:
+    def call_action():
+        asyncio.ensure_future(action(), loop=loop)
+
+    def repeat():
+        when = None
+        done = False
+        try:
+            when = next(times)
+        except StopIteration:
+            done = True
+
+        if not done:
+            delay = (when - datetime.now()).total_seconds()
+            loop.call_later(delay, call_action)
+            loop.call_later(delay, repeat)
+
+    loop.call_soon(repeat)
+
+
+def timeiter(start: datetime, step: timedelta) -> Generator[datetime, None, None]:
+    if step <= timedelta(0):
+        raise ValueError('step must be positive')
+
+    n = start
+    while True:
+        yield n
+        n += step
 
 
 class ScheduleWithStartOffset:
