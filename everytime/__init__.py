@@ -64,10 +64,10 @@ class ScheduleWithoutStartOffset:
         self.step = step
 
     def do(self, action, loop) -> ScheduleWithStartOffset:
-        self.starting_in(datetime.now()).do(action, loop)
+        self.starting_in(timedelta(0)).do(action, loop)
 
-    def starting_in(self, initial_delay: datetime) -> ScheduleWithStartOffset:
-        return ScheduleWithStartOffset(initial_delay, self.step)
+    def starting_in(self, initial_delay: timedelta) -> ScheduleWithStartOffset:
+        return ScheduleWithStartOffset(datetime.now() + initial_delay, self.step)
 
     def starting_at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
         now = datetime.now()
