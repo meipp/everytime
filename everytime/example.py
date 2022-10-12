@@ -8,6 +8,6 @@ async def do_something():
 
 loop = asyncio.get_event_loop()
 
-every(2 * seconds)(do_something, loop)
+every.other.second(do_something, loop)
 
 loop.run_forever()

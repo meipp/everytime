@@ -78,12 +78,39 @@ class ScheduleWithoutStartOffset:
         return ScheduleWithStartOffset(initial_delay, self.delay)
 
 
+class EveryN:
+    def __init__(self, n) -> None:
+        self.milliseconds = ScheduleWithoutStartOffset(n * milliseconds)
+        self.seconds = ScheduleWithoutStartOffset(n * seconds)
+        self.minutes = ScheduleWithoutStartOffset(n * minutes)
+        self.hours = ScheduleWithoutStartOffset(n * hours)
+        self.days = ScheduleWithoutStartOffset(n * days)
+        self.weeks = ScheduleWithoutStartOffset(n * weeks)
+
+
+class EveryOther:
+    def __init__(self) -> None:
+        self.millisecond = ScheduleWithoutStartOffset(other * millisecond)
+        self.second = ScheduleWithoutStartOffset(other * second)
+        self.minute = ScheduleWithoutStartOffset(other * minute)
+        self.hour = ScheduleWithoutStartOffset(other * hour)
+        self.day = ScheduleWithoutStartOffset(other * day)
+        self.week = ScheduleWithoutStartOffset(other * week)
+
+
 class Every:
     def __init__(self) -> None:
-        pass
+        self.millisecond = ScheduleWithoutStartOffset(millisecond)
+        self.second = ScheduleWithoutStartOffset(second)
+        self.minute = ScheduleWithoutStartOffset(minute)
+        self.hour = ScheduleWithoutStartOffset(hour)
+        self.day = ScheduleWithoutStartOffset(day)
+        self.week = ScheduleWithoutStartOffset(week)
 
-    def __call__(self, delay: float) -> ScheduleWithoutStartOffset:
-        return ScheduleWithoutStartOffset(delay)
+        self.other = EveryOther()
+
+    def __call__(self, n: float) -> EveryN:
+        return EveryN(n)
 
 
 every = Every()
