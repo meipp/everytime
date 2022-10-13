@@ -69,10 +69,16 @@ class ScheduleWithoutStartOffset:
         return iter(self.starting_in(timedelta(0)))
 
     def do(self, action, loop) -> ScheduleWithStartOffset:
-        self.starting_in(timedelta(0)).do(action, loop)
+        self.starting_now().do(action, loop)
+
+    def starting_now(self) -> ScheduleWithStartOffset:
+        return self.starting_in(timedelta(0))
 
     def starting_in(self, initial_delay: timedelta) -> ScheduleWithStartOffset:
-        return ScheduleWithStartOffset(datetime.now() + initial_delay, self.step)
+        return self.starting_at(datetime.now() + initial_delay)
+
+    def starting_at(self, start: datetime) -> ScheduleWithStartOffset:
+        return ScheduleWithStartOffset(start, self.step)
 
 
 class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
