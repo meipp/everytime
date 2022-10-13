@@ -54,14 +54,19 @@ class ScheduleWithStartOffset:
         self.initial_delay = initial_delay
         self.delay = delay
 
+    def __iter__(self) -> Generator[datetime, None, None]:
+        return timeiter(self.initial_delay, self.delay)
+
     def do(self, action, loop) -> None:
-        times = timeiter(self.initial_delay, self.delay)
-        schedule_at(times, action, loop)
+        schedule_at(iter(self), action, loop)
 
 
 class ScheduleWithoutStartOffset:
     def __init__(self, step: timedelta) -> None:
         self.step = step
+
+    def __iter__(self) -> Generator[datetime, None, None]:
+        return iter(self.starting_in(timedelta(0)))
 
     def do(self, action, loop) -> ScheduleWithStartOffset:
         self.starting_in(timedelta(0)).do(action, loop)
