@@ -93,7 +93,7 @@ class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
     def __init__(self, step: timedelta, weekday: int = None) -> None:
         super().__init__(step)
 
-        if weekday != None and (weekday < 0 or weekday > 6):
+        if weekday is not None and (weekday < 0 or weekday > 6):
             raise ValueError('weekday should be between 0 and 6')
 
         self.weekday = weekday
@@ -107,7 +107,7 @@ class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
         return self.starting_at(start)
 
     def starting_at(self, start: datetime) -> ScheduleWithStartOffset:
-        if self.weekday != None and self.weekday != start.weekday():
+        if self.weekday is not None and self.weekday != start.weekday():
             return self.starting_at(start + timedelta(days=1))
 
         return super().starting_at(start)
