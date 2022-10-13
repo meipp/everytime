@@ -125,6 +125,8 @@ class Every:
     def __call__(self, n: int) -> EveryN:
         if not isinstance(n, int):
             raise TypeError('n must be an integer')
+        if n <= 0:
+            raise ValueError('n must be positive')
         return EveryN(n)
 
 
