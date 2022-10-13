@@ -74,14 +74,15 @@ class ScheduleWithoutStartOffset:
     def starting_in(self, initial_delay: timedelta) -> ScheduleWithStartOffset:
         return ScheduleWithStartOffset(datetime.now() + initial_delay, self.step)
 
-    def starting_at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
+
+class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
+    def at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
         now = datetime.now()
         start = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
         if start < now:
             start += timedelta(days=1)
-        initial_delay = start - now
 
-        return ScheduleWithStartOffset(initial_delay, self.step)
+        return ScheduleWithStartOffset(start, self.step)
 
 
 class EveryN:
@@ -90,7 +91,7 @@ class EveryN:
         self.seconds = ScheduleWithoutStartOffset(n * seconds)
         self.minutes = ScheduleWithoutStartOffset(n * minutes)
         self.hours = ScheduleWithoutStartOffset(n * hours)
-        self.days = ScheduleWithoutStartOffset(n * days)
+        self.days = DayScheduleWithoutStartOffset(n * days)
         self.weeks = ScheduleWithoutStartOffset(n * weeks)
 
 
@@ -100,7 +101,7 @@ class EveryOther:
         self.second = ScheduleWithoutStartOffset(other * second)
         self.minute = ScheduleWithoutStartOffset(other * minute)
         self.hour = ScheduleWithoutStartOffset(other * hour)
-        self.day = ScheduleWithoutStartOffset(other * day)
+        self.day = DayScheduleWithoutStartOffset(other * day)
         self.week = ScheduleWithoutStartOffset(other * week)
 
 
@@ -110,7 +111,7 @@ class Every:
         self.second = ScheduleWithoutStartOffset(second)
         self.minute = ScheduleWithoutStartOffset(minute)
         self.hour = ScheduleWithoutStartOffset(hour)
-        self.day = ScheduleWithoutStartOffset(day)
+        self.day = DayScheduleWithoutStartOffset(day)
         self.week = ScheduleWithoutStartOffset(week)
 
         self.other = EveryOther()
