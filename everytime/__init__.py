@@ -10,6 +10,14 @@ day = days = timedelta(days=1)
 week = weeks = timedelta(weeks=1)
 other = 2
 
+monday = 0
+tuesday = 1
+wednesday = 2
+thursday = 3
+friday = 4
+saturday = 5
+sunday = 6
+
 
 def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
     def repeat():
@@ -82,13 +90,27 @@ class ScheduleWithoutStartOffset:
 
 
 class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
+    def __init__(self, step: timedelta, weekday: int = None) -> None:
+        super().__init__(step)
+
+        if weekday != None and (weekday < 0 or weekday > 6):
+            raise ValueError('weekday should be between 0 and 6')
+
+        self.weekday = weekday
+
     def at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
         now = datetime.now()
         start = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
         if start < now:
             start += timedelta(days=1)
 
-        return ScheduleWithStartOffset(start, self.step)
+        return self.starting_at(start)
+
+    def starting_at(self, start: datetime) -> ScheduleWithStartOffset:
+        if self.weekday != None and self.weekday != start.weekday():
+            return self.starting_at(start + timedelta(days=1))
+
+        return super().starting_at(start)
 
 
 class EveryN:
@@ -105,6 +127,14 @@ class EveryN:
         self.days = DayScheduleWithoutStartOffset(n * days)
         self.weeks = ScheduleWithoutStartOffset(n * weeks)
 
+        self.mondays = DayScheduleWithoutStartOffset(n * week, weekday=monday)
+        self.tuesdays = DayScheduleWithoutStartOffset(n * week, weekday=tuesday)
+        self.wednesdays = DayScheduleWithoutStartOffset(n * week, weekday=wednesday)
+        self.thursdays = DayScheduleWithoutStartOffset(n * week, weekday=thursday)
+        self.fridays = DayScheduleWithoutStartOffset(n * week, weekday=friday)
+        self.saturdays = DayScheduleWithoutStartOffset(n * week, weekday=saturday)
+        self.sundays = DayScheduleWithoutStartOffset(n * week, weekday=sunday)
+
 
 class EveryOther:
     def __init__(self) -> None:
@@ -114,6 +144,14 @@ class EveryOther:
         self.hour = ScheduleWithoutStartOffset(other * hour)
         self.day = DayScheduleWithoutStartOffset(other * day)
         self.week = ScheduleWithoutStartOffset(other * week)
+
+        self.monday = DayScheduleWithoutStartOffset(other * week, weekday=monday)
+        self.tuesday = DayScheduleWithoutStartOffset(other * week, weekday=tuesday)
+        self.wednesday = DayScheduleWithoutStartOffset(other * week, weekday=wednesday)
+        self.thursday = DayScheduleWithoutStartOffset(other * week, weekday=thursday)
+        self.friday = DayScheduleWithoutStartOffset(other * week, weekday=friday)
+        self.saturday = DayScheduleWithoutStartOffset(other * week, weekday=saturday)
+        self.sunday = DayScheduleWithoutStartOffset(other * week, weekday=sunday)
 
 
 class Every:
@@ -126,6 +164,14 @@ class Every:
         self.week = ScheduleWithoutStartOffset(week)
 
         self.other = EveryOther()
+
+        self.monday = DayScheduleWithoutStartOffset(week, weekday=monday)
+        self.tuesday = DayScheduleWithoutStartOffset(week, weekday=tuesday)
+        self.wednesday = DayScheduleWithoutStartOffset(week, weekday=wednesday)
+        self.thursday = DayScheduleWithoutStartOffset(week, weekday=thursday)
+        self.friday = DayScheduleWithoutStartOffset(week, weekday=friday)
+        self.saturday = DayScheduleWithoutStartOffset(week, weekday=saturday)
+        self.sunday = DayScheduleWithoutStartOffset(week, weekday=sunday)
 
     def __call__(self, n: int) -> EveryN:
         return EveryN(n)
