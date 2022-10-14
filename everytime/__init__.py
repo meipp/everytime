@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
-from typing import Generator
+from typing import Generator, Iterable
 
 millisecond = milliseconds = timedelta(milliseconds=1)
 second = seconds = timedelta(seconds=1)
@@ -27,7 +27,9 @@ def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
     loop.call_later(initial_delay, repeat)
 
 
-def schedule_at(times: Generator[datetime, None, None], action, loop) -> None:
+def schedule_at(times: Iterable[datetime], action, loop) -> None:
+    iterator = iter(times)
+
     def call_action():
         asyncio.ensure_future(action(), loop=loop)
 
@@ -35,7 +37,7 @@ def schedule_at(times: Generator[datetime, None, None], action, loop) -> None:
         when = None
         done = False
         try:
-            when = next(times)
+            when = next(iterator)
         except StopIteration:
             done = True
 
@@ -66,7 +68,7 @@ class ScheduleWithStartOffset:
         return timeiter(self.initial_delay, self.delay)
 
     def do(self, action, loop) -> None:
-        schedule_at(iter(self), action, loop)
+        schedule_at(self, action, loop)
 
 
 class ScheduleWithoutStartOffset:
