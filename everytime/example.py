@@ -1,13 +1,10 @@
 import asyncio
 from everytime import *
 
+loop = asyncio.new_event_loop()
 
-async def do_something():
+async def greet():
     print("Hello")
 
-
-loop = asyncio.get_event_loop()
-
-every.other.second.do(do_something, loop)
-
+every(5).seconds.do(greet, loop)
 loop.run_forever()
