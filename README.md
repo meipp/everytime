@@ -6,7 +6,7 @@
 async def do_something():
     ...
 ```
-to schedule `do_something()` every second Wednesday at 12:00 on the `asyncio.EventLoop` called `loop`. `loop` has to be running for that.
+To schedule `do_something()` every second Wednesday at 12:00 on the `asyncio.EventLoop` called `loop`. `loop` has to be running for that.
 
 ## Full Example
 ```python
