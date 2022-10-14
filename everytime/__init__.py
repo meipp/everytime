@@ -76,7 +76,7 @@ class ScheduleWithoutStartOffset:
         self.step = step
 
     def __iter__(self) -> Generator[datetime, None, None]:
-        return iter(self.starting_in(timedelta(0)))
+        return iter(self.starting_now())
 
     def do(self, action, loop) -> ScheduleWithStartOffset:
         self.starting_now().do(action, loop)
