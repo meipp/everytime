@@ -49,6 +49,13 @@ def schedule_at(times: Iterable[datetime], action, loop) -> None:
     loop.call_soon(repeat)
 
 
+def schedule(times: Iterable[datetime], loop):
+    def decorator(action):
+        schedule_at(times, action, loop)
+        return action
+    return decorator
+
+
 def timeiter(start: datetime, step: timedelta) -> Generator[datetime, None, None]:
     if step <= timedelta(0):
         raise ValueError('step must be positive')
