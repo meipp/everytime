@@ -32,14 +32,6 @@ def run_forever():
     get_event_loop().run_forever()
 
 
-def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
-    def repeat():
-        asyncio.ensure_future(action(), loop=loop)
-        loop.call_later(delay, repeat)
-
-    loop.call_later(initial_delay, repeat)
-
-
 def schedule_at(times: Iterable[datetime], action, loop=None) -> None:
     if loop is None:
         loop = get_event_loop()
