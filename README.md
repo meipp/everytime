@@ -19,6 +19,12 @@ async def greet():
 everytime.run_forever()
 ```
 
+## Install
+[Link to PyPi](https://pypi.org/project/everytime/)
+```
+pip install everytime
+```
+
 ## How to schedule coroutines
 
 ### everytime expressions as decorators
