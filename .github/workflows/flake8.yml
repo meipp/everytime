@@ -18,4 +18,4 @@ jobs:
       - name: install everything with poetry
         run: poetry install -v
       - name: Run flake8
-        run: poetry run flake8 --ignore=F403,F405 --count --statistics --max-line-length=120 everytime
+        run: poetry run flake8 --count --statistics --max-line-length=120 everytime
