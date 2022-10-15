@@ -2,7 +2,7 @@
 
 ## TLDR
 ```python
-@every.other.wednesday.at(hour=12)
+@every.other.wednesday.at("12:00")
 async def do_something():
     ...
 ```
@@ -82,7 +82,7 @@ Also, weekdays `monday` through `sunday` are supported. `every.wednesday` starts
 ### Specific time of the day
 `day` and the weekdays can be scheduled for a specific time of the day:
 ```python
-every.day.at(hour=12, minute=15)
+every.day.at("12:15")
 ```
 (Note that `hour` is 24-hour based)
 

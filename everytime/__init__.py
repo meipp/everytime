@@ -2,6 +2,7 @@ import asyncio
 from asyncio import AbstractEventLoop
 from datetime import datetime, timedelta
 from typing import Generator, Iterable
+import re
 
 millisecond = milliseconds = timedelta(milliseconds=1)
 second = seconds = timedelta(seconds=1)
@@ -124,7 +125,14 @@ class DayScheduleWithoutStartOffset(ScheduleWithoutStartOffset):
 
         self.weekday = weekday
 
-    def at(self, hour: float, minute: float = 0) -> ScheduleWithStartOffset:
+    def at(self, time: str) -> ScheduleWithStartOffset:
+        match = re.match(r'\A(\d\d):(\d\d)\Z', time)
+        if not match:
+            raise ValueError('time must be in the format HH:MM')
+
+        hour = int(match.group(1))
+        minute = int(match.group(2))
+
         now = datetime.now()
         start = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
         if start < now:
