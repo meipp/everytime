@@ -18,6 +18,19 @@ friday = 4
 saturday = 5
 sunday = 6
 
+default_loop = asyncio.new_event_loop()
+
+
+def get_event_loop():
+    try:
+        return asyncio.get_running_loop()
+    except RuntimeError:
+        return default_loop
+
+
+def run_forever():
+    get_event_loop().run_forever()
+
 
 def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
     def repeat():
@@ -27,7 +40,10 @@ def schedule_repeating_action(loop, initial_delay, delay, action) -> None:
     loop.call_later(initial_delay, repeat)
 
 
-def schedule_at(times: Iterable[datetime], action, loop) -> None:
+def schedule_at(times: Iterable[datetime], action, loop=None) -> None:
+    if loop is None:
+        loop = get_event_loop()
+
     iterator = iter(times)
 
     def call_action():
@@ -49,7 +65,7 @@ def schedule_at(times: Iterable[datetime], action, loop) -> None:
     loop.call_soon(repeat)
 
 
-def schedule(times: Iterable[datetime], loop):
+def schedule(times: Iterable[datetime], loop=None):
     def decorator(action):
         schedule_at(times, action, loop)
         return action
@@ -74,7 +90,7 @@ class ScheduleWithStartOffset:
     def __iter__(self) -> Generator[datetime, None, None]:
         return timeiter(self.initial_delay, self.delay)
 
-    def do(self, action, loop) -> None:
+    def do(self, action, loop=None) -> None:
         schedule_at(self, action, loop)
 
 
@@ -85,7 +101,7 @@ class ScheduleWithoutStartOffset:
     def __iter__(self) -> Generator[datetime, None, None]:
         return iter(self.starting_now())
 
-    def do(self, action, loop) -> ScheduleWithStartOffset:
+    def do(self, action, loop=None) -> ScheduleWithStartOffset:
         self.starting_now().do(action, loop)
 
     def starting_now(self) -> ScheduleWithStartOffset:
