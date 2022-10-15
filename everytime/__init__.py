@@ -83,6 +83,10 @@ class ScheduleWithStartOffset:
     def __iter__(self) -> Generator[datetime, None, None]:
         return timeiter(self.initial_delay, self.delay)
 
+    def __call__(self, action):
+        self.do(action, loop=None)
+        return action
+
     def do(self, action, loop: AbstractEventLoop = None) -> None:
         schedule_at(self, action, loop)
 
@@ -93,6 +97,10 @@ class ScheduleWithoutStartOffset:
 
     def __iter__(self) -> Generator[datetime, None, None]:
         return iter(self.starting_now())
+
+    def __call__(self, action):
+        self.do(action, loop=None)
+        return action
 
     def do(self, action, loop: AbstractEventLoop = None) -> ScheduleWithStartOffset:
         self.starting_now().do(action, loop)
