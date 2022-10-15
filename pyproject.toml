@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "everytime"
-version = "0.2.0"
+version = "0.2.1"
 description = "Schedule asyncio coroutines"
 authors = ["meipp <meipp@users.noreply.github.com>"]
 homepage = "https://github.com/meipp/every/"
