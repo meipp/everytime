@@ -36,7 +36,7 @@ async def greet():
 ```
 
 ### @schedule
-Aternatively you can wrap the everytime expression into a call to `@schedule`.
+Alternatively, you can wrap the everytime expression into a call to `@schedule`.
 ```python
 @schedule(every(5).seconds)
 async def greet():
