@@ -38,9 +38,9 @@ async def greet():
 ```
 This allows you to pass custom datetime iterables to `@schedule` (see [Schedule custom times](#schedule-custom-times)).
 
-<a id="schedule-custom-times">
+<a id="schedule-custom-times"/>
+
 #### Schedule custom times
-</a>
 `@schedule` accepts datetime iterables. The following schedules work:
 ```python
 @schedule([datetime.fromisoformat('2022-11-01T12:00:00'), datetime.fromisoformat('2023-01-01T12:00:00')])
