@@ -1,4 +1,4 @@
-# everytime - Schedule asyncio coroutines
+# everytime - Schedule python asyncio coroutines
 
 ## TLDR
 ```python
