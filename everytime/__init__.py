@@ -67,6 +67,18 @@ def schedule(times: Iterable[datetime], loop: AbstractEventLoop = None):
 
 
 def timeiter(start: datetime, step: timedelta) -> Generator[datetime, None, None]:
+    """Creates an infinite iterator of datetime objects beginning with `start` using steps of width `step`.
+
+    Args:
+        start (datetime): The start value for the iteration
+        step (timedelta): The step for the iteration. `step` must be positive.
+
+    Returns:
+        Generator[datetime, None, None]: The infinite sequence `(start, start + step, start + 2*step, ...)`
+
+    Raises:
+        ValueError: If `step` is not positive.
+    """
     if step <= timedelta(0):
         raise ValueError('step must be positive')
 
